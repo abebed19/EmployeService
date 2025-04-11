@@ -3,24 +3,35 @@ package com.abayllc.crud.rest;
 import com.abayllc.crud.dao.EmployeDAO;
 import com.abayllc.crud.dao.EmployeeDAOImpl;
 import com.abayllc.crud.entity.Employee;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.abayllc.crud.service.EmployeeService;
+import jakarta.persistence.Entity;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/api")
 public class EmployeeRestController {
-    private EmployeDAO employeeDAO;
+    private EmployeeService employeeService;
 
-    public EmployeeRestController(EmployeDAO employeeDAO) {
-        this.employeeDAO = employeeDAO;
+    public EmployeeRestController(EmployeeService employeeService) {
+        this.employeeService = employeeService;
     }
 
     @GetMapping("/employees")
     public List<Employee> getAllEmployees() {
-        return employeeDAO.findAll();
+        return employeeService.getAllEmployees();
+    }
+    @GetMapping("/employee/{id}")
+    public Employee getEmployee(@PathVariable int id) {
+        return employeeService.getEmployee(id);
+    }
+    @PostMapping("/employees")
+    public Employee addEmployee( @RequestBody Employee theEmployee) {
+        theEmployee.setId(0);
+        Employee dbEMP = employeeService.save(theEmployee);
+        return dbEMP;
+
     }
 
 
